@@ -4,26 +4,56 @@ import (
 	"example/helper"
 	"fmt"
 	"strings"
+	"time"
 )
+
+var bookings = make([]UserData, 0)
+
+type UserData struct {
+	firstName string
+	lastName  string
+	email     string
+	tickets   uint
+}
 
 func main() {
 	conferanceName := "Go Conference"
 
 	const conferanceTikets int = 50
 	var remainingTickets int = conferanceTikets
-	bookings := []string{"John Doe", "Jane Doe", "John Smith", "Jane Smith"}
+	datanames := []string{"John Doe", "Jane Doe", "John Smith", "Jane Smith"}
 
 	fmt.Printf("conferenceTickets is %T, rmainingTickets is %T, conferenceName is %T \n", conferanceTikets, remainingTickets, conferanceName)
 	fmt.Printf("Welcome to %v booking application\n", conferanceName)
 	fmt.Printf("We have total of %v tickets and %v are still available.\n", conferanceTikets, remainingTickets)
 
-	firstNames := []string{}
-	for _, booking := range bookings {
+	// firstNames := []string{}
+	for _, booking := range datanames {
 		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		// firstNames = append(firstNames, names[0])
+
 		fmt.Printf("%s %s\n", helper.Greeting, names[1])
+
+		//var userData = make(map[string]string)
+		var userData = UserData{
+			firstName: names[0],
+			lastName:  names[1],
+			email:     names[0] + "." + names[1] + "@example.com",
+			tickets:   2,
+		}
+		remainingTickets = remainingTickets - int(userData.tickets)
+		fmt.Print("Remaining tickets are %v\n", remainingTickets)
+		// userData["firstName"] = names[0]
+		// userData["lastName"] = names[1]
+		// userData["email"] = names[0] + "." + names[1] + "@example.com"
+		// userData["tickets"] = strconv.FormatInt(2, 10)
+
+		bookings = append(bookings, userData)
+		sendTicket(userData)
+		fmt.Printf("User data is %v\n", userData)
 	}
-	fmt.Printf(("The first names of the bookings are %v\n"), firstNames)
+	fmt.Printf("Bookings are %v\n", bookings)
+	// fmt.Printf(("The first names of the bookings are %v\n"), firstNames)
 
 	if remainingTickets == 0 {
 		fmt.Println("Sorry, we are sold out!")
@@ -61,4 +91,12 @@ func main() {
 	// 	}
 	// 	fmt.Printf("We have %d tickets remaining\n", remainingTickets)
 	// }
+}
+
+func sendTicket(user UserData) {
+	time.Sleep(10 * time.Second)
+	var ticket = fmt.Sprint("%d tickets sending ticket to %v\n", user.tickets, user.firstName)
+	fmt.Print("====================================\n")
+	fmt.Println(ticket)
+	fmt.Print("====================================\n")
 }
