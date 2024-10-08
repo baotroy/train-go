@@ -1,102 +1,103 @@
+// You can edit this code!
+// Click here and start typing.
 package main
 
 import (
+	"errors"
 	"example/helper"
 	"fmt"
 	"strings"
-	"time"
 )
 
-var bookings = make([]UserData, 0)
+type user struct {
+	name                 string
+	number               string
+	scheduledForDeletion bool
+}
 
-type UserData struct {
-	firstName string
-	lastName  string
-	email     string
-	tickets   uint
+func deleteIfNecessary(users map[string]user, name string) (deleted bool, err error) {
+	existingUser, ok := users[name]
+	fmt.Printf("existing user is %v\n", existingUser)
+	fmt.Printf("Ok is %v\n", ok)
+	if !ok {
+		return false, errors.New("user does not exist")
+	}
+
+	if existingUser.scheduledForDeletion {
+		delete(users, name)
+		return true, nil
+	}
+	return false, nil
+}
+
+func countDistinctWords(messages []string) int {
+	var counter = make(map[string]bool)
+	for _, message := range messages {
+		words := strings.Split(message, " ")
+		for _, word := range words {
+			if _, existed := counter[strings.ToLower(word)]; !existed {
+				counter[strings.ToLower(word)] = true
+			}
+		}
+	}
+	return len(counter)
+}
+
+func getNameCounts(names []string) map[rune]map[string]int {
+	count := make(map[rune]map[string]int)
+	for _, name := range names {
+		if name == "" {
+			continue
+		}
+		firstChar := rune(name[0])
+		if _, exists := count[firstChar]; !exists {
+			count[firstChar] = make(map[string]int)
+		}
+		count[firstChar][name]++
+	}
+	return count
 }
 
 func main() {
-	conferanceName := "Go Conference"
-
-	const conferanceTikets int = 50
-	var remainingTickets int = conferanceTikets
-	datanames := []string{"John Doe", "Jane Doe", "John Smith", "Jane Smith"}
-
-	fmt.Printf("conferenceTickets is %T, rmainingTickets is %T, conferenceName is %T \n", conferanceTikets, remainingTickets, conferanceName)
-	fmt.Printf("Welcome to %v booking application\n", conferanceName)
-	fmt.Printf("We have total of %v tickets and %v are still available.\n", conferanceTikets, remainingTickets)
-
-	// firstNames := []string{}
-	for _, booking := range datanames {
-		var names = strings.Fields(booking)
-		// firstNames = append(firstNames, names[0])
-
-		fmt.Printf("%s %s\n", helper.Greeting, names[1])
-
-		//var userData = make(map[string]string)
-		var userData = UserData{
-			firstName: names[0],
-			lastName:  names[1],
-			email:     names[0] + "." + names[1] + "@example.com",
-			tickets:   2,
-		}
-		remainingTickets = remainingTickets - int(userData.tickets)
-		fmt.Print("Remaining tickets are %v\n", remainingTickets)
-		// userData["firstName"] = names[0]
-		// userData["lastName"] = names[1]
-		// userData["email"] = names[0] + "." + names[1] + "@example.com"
-		// userData["tickets"] = strconv.FormatInt(2, 10)
-
-		bookings = append(bookings, userData)
-		sendTicket(userData)
-		fmt.Printf("User data is %v\n", userData)
-	}
-	fmt.Printf("Bookings are %v\n", bookings)
-	// fmt.Printf(("The first names of the bookings are %v\n"), firstNames)
-
-	if remainingTickets == 0 {
-		fmt.Println("Sorry, we are sold out!")
-		return
-	}
-	// for {
-
-	// 	var firstName string
-	// 	var lastName string
-	// 	var email string
-	// 	var userTickets int
-	// 	fmt.Println("Enter your first name")
-	// 	fmt.Scan(&firstName)
-
-	// 	fmt.Println("Enter your last name")
-	// 	fmt.Scan(&lastName)
-
-	// 	fmt.Println("Enter your email")
-	// 	fmt.Scan(&email)
-
-	// 	fmt.Println("Enter number of tickets you want to book")
-	// 	fmt.Scan(&userTickets)
-
-	// 	remainingTickets = remainingTickets - userTickets
-
-	// 	bookings = append(bookings, firstName+" "+lastName)
-
-	// 	fmt.Printf("Array length is %d\n", len(bookings))
-
-	// 	fmt.Printf("Thank you %s for booking %d tickets. You will receive a confirmation email at %s\n", bookings[0], userTickets, email)
-
-	// 	firstNames := []string{}
-	// 	for index, booking := range bookings {
-	// 		fmt
-	// 	}
-	// 	fmt.Printf("We have %d tickets remaining\n", remainingTickets)
+	fmt.Print(helper.Greeting("abc"))
+	// users := map[string]user{
+	// 	"John": {
+	// 		name:                 "John",
+	// 		number:               "1234567890",
+	// 		scheduledForDeletion: true,
+	// 	},
+	// 	"Jane": {
+	// 		name:                 "Jane",
+	// 		number:               "0987654321",
+	// 		scheduledForDeletion: false,
+	// 	},
 	// }
-}
+	// user, ok := users["John1"]
+	// data := map[string]int{
+	// 	"a": 1,
+	// 	"b": 2,
+	// }
+	// user, ok := data["c"]
 
-func sendTicket(user UserData) {
-	time.Sleep(10 * time.Second)
-	var ticket = fmt.Sprint("%d tickets sending ticket to %v\n", user.tickets, user.firstName)
-	fmt.Print("====================================\n")
-	fmt.Println(ticket)
-	fmt.Print("====================================\n")
+	// // res, err := deleteIfNecessary(users, "John1")
+	// fmt.Printf("Result is %v\n", user)
+	// fmt.Printf("Error is %v\n", ok)
+	// messages := []string{"Hello world", "hello there", "General Kenobi"}
+	// count := countDistinctWords(messages)
+	// fmt.Print(count)
+	// m := map[string]map[string]int{
+	// 	"b": {
+	// 		"billy": 2,
+	// 		"bob":   1,
+	// 	},
+	// 	"j": {
+	// 		"joe": 1,
+	// 	},
+	// }
+	// fmt.Print(m)
+	// names := []string{
+	// 	"billy", "billy", "bob", "joe",
+	// }
+	// c := getNameCounts(names)
+	// fmt.Print(c)
 }
